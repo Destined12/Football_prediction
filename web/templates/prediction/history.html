@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Prediction History - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-8">Prediction History</h1>
+
+    {% if predictions %}
+    <div class="glass rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead>
+                    <tr class="border-b border-dark-700 bg-dark-900/50">
+                        <th class="py-3 px-4 text-dark-400 font-medium">Date</th>
+                        <th class="py-3 px-4 text-dark-400 font-medium">Home</th>
+                        <th class="py-3 px-4 text-dark-400 font-medium">Away</th>
+                        <th class="py-3 px-4 text-dark-400 font-medium">Prediction</th>
+                        <th class="py-3 px-4 text-dark-400 font-medium">Confidence</th>
+                        <th class="py-3 px-4 text-dark-400 font-medium">H / D / A</th>
+                    </tr>
+                </thead>
+                <tbody class="text-dark-300">
+                    {% for p in predictions %}
+                    <tr class="border-b border-dark-700/50 hover:bg-dark-800/50 transition-colors">
+                        <td class="py-3 px-4">{{ p.created_at|date:"d M Y H:i" }}</td>
+                        <td class="py-3 px-4 text-white font-medium">{{ p.home_team }}</td>
+                        <td class="py-3 px-4 text-white font-medium">{{ p.away_team }}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                {% if p.predicted_result == 'H' %}bg-emerald-500/20 text-emerald-400
+                                {% elif p.predicted_result == 'D' %}bg-yellow-500/20 text-yellow-400
+                                {% else %}bg-red-500/20 text-red-400{% endif %}">
+                                {{ p.predicted_label }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">{{ p.confidence|floatformat:1 }}%</td>
+                        <td class="py-3 px-4 text-xs">
+                            {{ p.prob_home|floatformat:1 }} / {{ p.prob_draw|floatformat:1 }} / {{ p.prob_away|floatformat:1 }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <div class="glass rounded-2xl p-12 text-center">
+        <svg class="w-12 h-12 text-dark-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <p class="text-dark-400">No predictions yet.</p>
+        <a href="{% url 'prediction:predict' %}" class="inline-block mt-4 btn-primary px-6 py-2 rounded-xl text-white text-sm font-medium">Make a Prediction</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

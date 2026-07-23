@@ -1,0 +1,69 @@
+Feature Name,Description,Data Type,Min,Max,Mean,Std
+away_atk_avg_corners,Avg corners in last 10 matches,float,0.0,14.0,5.2375,1.3439
+away_atk_avg_goals,Avg goals in last 10 matches (all venues),float,0.0,4.0,1.4457,0.5971
+away_atk_avg_shots,Avg shots in last 10 matches,float,0.0,31.0,12.8013,2.903
+away_atk_avg_sot,Avg shots on target in last 10 matches,float,0.0,9.5,4.4883,1.2343
+away_def_avg_fouls,Avg fouls in last 10 matches,float,0.0,16.0,10.7461,1.5575
+away_def_avg_goals_conceded,Avg goals conceded in last 10 matches,float,0.0,5.0,1.4336,0.5287
+away_def_avg_red,Avg red cards in last 10 matches,float,0.0,0.5,0.0584,0.076
+away_def_avg_yellow,Avg yellow cards in last 10 matches,float,0.0,4.1,1.7737,0.5446
+away_def_clean_sheets,Proportion of clean sheets in last 10,float,0.0,1.0,0.2626,0.1656
+away_def_shots_faced,Avg shots faced in last 10 matches,float,0.0,27.0,12.6752,2.9742
+away_disc_fouls,Avg fouls committed in last 10 matches,float,0.0,16.0,10.7461,1.5575
+away_disc_red,Avg red cards in last 10 matches,float,0.0,0.5,0.0584,0.076
+away_disc_yellow,Avg yellow cards in last 10 matches,float,0.0,4.1,1.7737,0.5446
+away_form_avg_goals,Goals scored / matches in last 5,float,0.0,4.0,1.4389,0.5948
+away_form_avg_shots,Total shots / matches in last 5,float,0.0,31.0,12.7457,2.8981
+away_form_avg_sot,Shots on target / matches in last 5,float,0.0,9.6,4.467,1.2357
+away_form_draws,Count of draws for away team in last 5,int,0.0,7.0,2.2595,1.3696
+away_form_goal_diff,Goals scored - Goals conceded in last 5,int,-27.0,31.0,0.1119,8.7777
+away_form_goals_conceded,Total goals conceded by away team in last 5,int,0.0,35.0,13.93,5.2394
+away_form_goals_scored,Total goals scored by away team in last 5,int,0.0,38.0,14.0419,5.9713
+away_form_losses,Count of losses for away team in last 5,int,0.0,10.0,3.6952,2.0448
+away_form_points,Wins*3 + Draws for away team in last 5,int,0.0,30.0,13.5392,6.0183
+away_form_wins,Count of wins for away team in last 5,int,0.0,10.0,3.7599,2.0793
+away_mom_loss_streak,Consecutive losses from last match backwards,int,0.0,10.0,2.1753,2.6498
+away_mom_unbeaten_streak,Consecutive unbeaten matches from last backwards,int,0.0,10.0,2.0048,2.5868
+away_mom_win_streak,Consecutive wins from last match backwards,int,0.0,10.0,2.4727,2.7359
+away_team_away_avg_goals,Avg goals scored by away team in away matches,float,0.0,5.0,1.2882,0.4636
+away_team_away_avg_goals_conceded,Avg goals conceded by away team away,float,0.0,5.0,1.5041,0.4274
+away_team_away_avg_shots,Avg shots by away team in away matches,float,0.0,20.5,11.4169,2.5524
+away_team_away_avg_sot,Avg SOT by away team in away matches,float,0.0,9.0,4.0673,1.0814
+away_team_away_win_rate,Away wins / total away matches historically,float,0.0,1.0,0.333,0.1643
+h2h_away_goals,Goals scored by away team in last 5 meetings,int,0.0,20.0,4.3515,3.7643
+h2h_away_wins,Number of away team wins in last 5 meetings,int,0.0,5.0,1.1987,1.2535
+h2h_draws,Number of draws in last 5 meetings,int,0.0,5.0,0.7119,0.8989
+h2h_goal_diff,Home goals - away goals in last 5 meetings,int,-17.0,18.0,-0.1273,4.2036
+h2h_home_goals,Goals scored by home team in last 5 meetings,int,0.0,21.0,4.2242,3.7357
+h2h_home_wins,Number of home team wins in last 5 meetings,int,0.0,5.0,1.1449,1.2287
+home_atk_avg_corners,Avg corners in last 10 matches,float,0.0,10.3,5.1738,1.316
+home_atk_avg_goals,Avg goals in last 10 matches (all venues),float,0.0,5.0,1.4363,0.5978
+home_atk_avg_shots,Avg shots in last 10 matches,float,0.0,24.3,12.6652,2.8791
+home_atk_avg_sot,Avg shots on target in last 10 matches,float,0.0,9.0,4.4483,1.2411
+home_def_avg_fouls,Avg fouls in last 10 matches,float,0.0,19.0,10.7651,1.5783
+home_def_avg_goals_conceded,Avg goals conceded in last 10 matches,float,0.0,4.0,1.4376,0.5286
+home_def_avg_red,Avg red cards in last 10 matches,float,0.0,1.0,0.0582,0.0791
+home_def_avg_yellow,Avg yellow cards in last 10 matches,float,0.0,4.1,1.7823,0.5454
+home_def_clean_sheets,Proportion of clean sheets in last 10,float,0.0,1.0,0.2603,0.1648
+home_def_shots_faced,Avg shots faced in last 10 matches,float,0.0,31.0,12.784,3.0385
+home_disc_fouls,Avg fouls committed in last 10 matches,float,0.0,19.0,10.7651,1.5783
+home_disc_red,Avg red cards in last 10 matches,float,0.0,1.0,0.0582,0.0791
+home_disc_yellow,Avg yellow cards in last 10 matches,float,0.0,4.1,1.7823,0.5454
+home_form_avg_goals,Goals scored / matches in last 5,float,0.0,5.0,1.4386,0.5953
+home_form_avg_shots,Total shots / matches in last 5,float,0.0,24.3,12.7111,2.8873
+home_form_avg_sot,Shots on target / matches in last 5,float,0.0,9.0,4.4609,1.2408
+home_form_draws,Count of draws for home team in last 5,int,0.0,7.0,2.2656,1.3427
+home_form_goal_diff,Goals scored - Goals conceded in last 5,int,-27.0,33.0,0.1335,8.7509
+home_form_goals_conceded,Total goals conceded by home team in last 5,int,0.0,36.0,13.907,5.2057
+home_form_goals_scored,Total goals scored by home team in last 5,int,0.0,37.0,14.0405,6.0107
+home_form_losses,Count of losses for home team in last 5,int,0.0,10.0,3.6978,2.0178
+home_form_points,Wins*3 + Draws for home team in last 5,int,0.0,30.0,13.5322,5.9771
+home_form_wins,Count of wins for home team in last 5,int,0.0,10.0,3.7555,2.0675
+home_mom_loss_streak,Consecutive losses from last match backwards,int,0.0,10.0,2.4295,2.6562
+home_mom_unbeaten_streak,Consecutive unbeaten matches from last backwards,int,0.0,10.0,1.8515,2.5516
+home_mom_win_streak,Consecutive wins from last match backwards,int,0.0,10.0,2.2326,2.7254
+home_team_home_avg_goals,Avg goals scored by home team in home matches,float,0.0,4.6667,1.505,0.538
+home_team_home_avg_goals_conceded,Avg goals conceded by home team at home,float,0.0,5.0,1.2543,0.3718
+home_team_home_avg_shots,Avg shots by home team in home matches,float,0.0,31.0,13.4721,2.7373
+home_team_home_avg_sot,Avg SOT by home team in home matches,float,0.0,10.0,4.6459,1.1148
+home_team_home_win_rate,Home wins / total home matches historically,float,0.0,1.0,0.429,0.1815

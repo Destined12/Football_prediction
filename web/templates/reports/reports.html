@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Reports - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-4">Report Exports</h1>
+    <p class="text-dark-400 mb-8">Download model evaluation results, feature analysis, and training reports.</p>
+
+    <div class="space-y-4">
+        {% for report in report_types %}
+        <div class="glass rounded-xl p-5 flex items-center justify-between">
+            <div>
+                <h3 class="text-white font-medium">{{ report.name }}</h3>
+                <p class="text-dark-500 text-xs mt-1">{{ report.key }}.csv</p>
+            </div>
+            <div class="flex gap-2">
+                <a href="{% url 'reports:download_report' report_type=report.key fmt='csv' %}"
+                   class="px-3 py-1.5 rounded-lg bg-dark-700 text-dark-300 text-xs font-medium hover:bg-dark-600 hover:text-white transition-all">
+                    CSV
+                </a>
+                <a href="{% url 'reports:download_report' report_type=report.key fmt='excel' %}"
+                   class="px-3 py-1.5 rounded-lg bg-dark-700 text-dark-300 text-xs font-medium hover:bg-dark-600 hover:text-white transition-all">
+                    Excel
+                </a>
+                <a href="{% url 'reports:download_report' report_type=report.key fmt='pdf' %}"
+                   class="px-3 py-1.5 rounded-lg bg-dark-700 text-dark-300 text-xs font-medium hover:bg-dark-600 hover:text-white transition-all">
+                    PDF
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="glass rounded-xl p-8 text-center text-dark-500">
+            No reports available. Run the model pipeline to generate results.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% block title %}Predict - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl font-bold text-white mb-3">Match Prediction</h1>
+        <p class="text-dark-400">Select two teams and get an AI-powered prediction with confidence scores.</p>
+        <p class="text-dark-500 text-sm mt-2">Predictions are most accurate when at least one team is a supported club
+            ({% for club in supported_clubs %}{{ club }}{% if not forloop.last %}, {% endif %}{% endfor %}).</p>
+    </div>
+
+    <div class="glass rounded-2xl p-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+            <div>
+                <label class="block text-sm font-medium text-dark-300 mb-2">Home Team</label>
+                <select id="home-team" class="w-full bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all appearance-none cursor-pointer">
+                    <option value="" disabled selected>Select home team</option>
+                    {% for club in clubs %}
+                    <option value="{{ club }}">{{ club }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-dark-300 mb-2">Away Team</label>
+                <select id="away-team" class="w-full bg-dark-800 border border-dark-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all appearance-none cursor-pointer">
+                    <option value="" disabled selected>Select away team</option>
+                    {% for club in clubs %}
+                    <option value="{{ club }}">{{ club }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <button id="predict-btn" onclick="makePrediction()" class="btn-primary px-10 py-3 rounded-xl text-white font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                <span id="btn-text">Predict Match</span>
+                <span id="btn-spinner" class="hidden">
+                    <svg class="animate-spin h-5 w-5 text-white inline-block" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    Analyzing...
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <div id="error-msg" class="hidden mt-4 glass rounded-xl p-4 border border-red-500/30 text-red-400 text-sm text-center"></div>
+
+    <div id="result-card" class="hidden mt-8 fade-in">
+        <div class="glass rounded-2xl p-8 gradient-border">
+            <div class="text-center mb-6">
+                <p class="text-dark-400 text-sm mb-2">Prediction for <span id="res-teams" class="text-white font-medium"></span></p>
+                <div id="res-badge" class="inline-flex items-center px-6 py-2 rounded-full text-lg font-bold"></div>
+                <p class="text-dark-400 text-sm mt-2">Confidence: <span id="res-confidence" class="text-white font-semibold"></span></p>
+            </div>
+
+            <div class="space-y-3 mb-8">
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-dark-300">Home Win</span>
+                        <span id="res-prob-home" class="text-white font-medium"></span>
+                    </div>
+                    <div class="w-full bg-dark-800 rounded-full h-2.5">
+                        <div id="bar-home" class="bg-emerald-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-dark-300">Draw</span>
+                        <span id="res-prob-draw" class="text-white font-medium"></span>
+                    </div>
+                    <div class="w-full bg-dark-800 rounded-full h-2.5">
+                        <div id="bar-draw" class="bg-yellow-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm mb-1">
+                        <span class="text-dark-300">Away Win</span>
+                        <span id="res-prob-away" class="text-white font-medium"></span>
+                    </div>
+                    <div class="w-full bg-dark-800 rounded-full h-2.5">
+                        <div id="bar-away" class="bg-red-500 h-2.5 rounded-full transition-all duration-700" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="shap-section" class="hidden">
+                <h3 class="text-white font-semibold mb-3">Top Influencing Features</h3>
+                <div id="shap-features" class="space-y-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% csrf_token %}
+<script>
+async function makePrediction() {
+    const homeTeam = document.getElementById('home-team').value;
+    const awayTeam = document.getElementById('away-team').value;
+    const btn = document.getElementById('predict-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const errorMsg = document.getElementById('error-msg');
+    const resultCard = document.getElementById('result-card');
+
+    errorMsg.classList.add('hidden');
+    resultCard.classList.add('hidden');
+
+    if (!homeTeam || !awayTeam) {
+        errorMsg.textContent = 'Please select both teams.';
+        errorMsg.classList.remove('hidden');
+        return;
+    }
+    if (homeTeam === awayTeam) {
+        errorMsg.textContent = 'Please select different teams.';
+        errorMsg.classList.remove('hidden');
+        return;
+    }
+
+    btn.disabled = true;
+    btnText.classList.add('hidden');
+    btnSpinner.classList.remove('hidden');
+
+    const formData = new FormData();
+    formData.append('home_team', homeTeam);
+    formData.append('away_team', awayTeam);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+
+    try {
+        const resp = await fetch("{% url 'prediction:api_predict' %}", {
+            method: 'POST',
+            body: formData,
+        });
+        const data = await resp.json();
+
+        if (!resp.ok) {
+            errorMsg.textContent = data.error || 'Prediction failed.';
+            errorMsg.classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('res-teams').textContent = homeTeam + ' vs ' + awayTeam;
+        document.getElementById('res-confidence').textContent = data.confidence + '%';
+
+        const badge = document.getElementById('res-badge');
+        badge.textContent = data.predicted_label;
+        badge.className = 'inline-flex items-center px-6 py-2 rounded-full text-lg font-bold ';
+        if (data.predicted_result === 'H') {
+            badge.className += 'bg-emerald-500/20 text-emerald-400';
+        } else if (data.predicted_result === 'D') {
+            badge.className += 'bg-yellow-500/20 text-yellow-400';
+        } else {
+            badge.className += 'bg-red-500/20 text-red-400';
+        }
+
+        document.getElementById('res-prob-home').textContent = data.probabilities.home + '%';
+        document.getElementById('res-prob-draw').textContent = data.probabilities.draw + '%';
+        document.getElementById('res-prob-away').textContent = data.probabilities.away + '%';
+
+        setTimeout(() => {
+            document.getElementById('bar-home').style.width = data.probabilities.home + '%';
+            document.getElementById('bar-draw').style.width = data.probabilities.draw + '%';
+            document.getElementById('bar-away').style.width = data.probabilities.away + '%';
+        }, 100);
+
+        const shapSection = document.getElementById('shap-section');
+        const shapContainer = document.getElementById('shap-features');
+        shapContainer.innerHTML = '';
+
+        if (data.shap_features && data.shap_features.length > 0) {
+            shapSection.classList.remove('hidden');
+            data.shap_features.forEach(f => {
+                const maxImp = Math.max(...data.shap_features.map(x => x.importance));
+                const pct = maxImp > 0 ? (f.importance / maxImp * 100) : 0;
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-dark-400">${f.name}</span>
+                        <span class="text-dark-300">${f.importance.toFixed(4)}</span>
+                    </div>
+                    <div class="w-full bg-dark-800 rounded-full h-1.5">
+                        <div class="bg-brand-500 h-1.5 rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                    </div>
+                `;
+                shapContainer.appendChild(div);
+            });
+        } else {
+            shapSection.classList.add('hidden');
+        }
+
+        resultCard.classList.remove('hidden');
+    } catch (err) {
+        errorMsg.textContent = 'Network error. Please try again.';
+        errorMsg.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btnText.classList.remove('hidden');
+        btnSpinner.classList.add('hidden');
+    }
+}
+</script>
+{% endblock %}

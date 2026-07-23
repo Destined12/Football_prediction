@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Methodology - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-8">Methodology</h1>
+
+    <div class="space-y-8">
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">1. Data Collection & Preprocessing</h2>
+            <ul class="space-y-2 text-dark-300 text-sm leading-relaxed">
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Historical match data collected from football-data.co.uk</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> 6 seasons merged and sorted chronologically (2019-2025)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> All betting odds columns excluded to prevent data leakage</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Duplicates removed, dates standardized, missing values handled</li>
+            </ul>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">2. Feature Engineering</h2>
+            <ul class="space-y-2 text-dark-300 text-sm leading-relaxed">
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> 198 features engineered across 15+ categories (form, performance, H2H, Elo, dominance, momentum, etc.)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Strict anti-leakage: features computed only from historical matches before the fixture</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Rolling windows for team form (last 5 matches)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Head-to-head features computed from past meetings only</li>
+            </ul>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">3. Feature Selection</h2>
+            <ul class="space-y-2 text-dark-300 text-sm leading-relaxed">
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Correlation analysis to remove redundant features (|r| &gt; 0.90)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> SHAP-based feature importance ranking</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> 50 features selected from 157 (after correlation filter) via SHAP ranking + TimeSeriesSplit CV</li>
+            </ul>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">4. Model Training</h2>
+            <ul class="space-y-2 text-dark-300 text-sm leading-relaxed">
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Chronological train/test split (2019-2024 train, 2024-2025 test)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Three heterogeneous base learners: XGBoost, SVM (with StandardScaler), Random Forest</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Meta-learner: Logistic Regression with balanced class weights (OOF stacking to prevent leakage)</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Stacking: 9 probability features from base models (3 each) fed into meta-learner</li>
+            </ul>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">5. Model Evaluation</h2>
+            <ul class="space-y-2 text-dark-300 text-sm leading-relaxed">
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Accuracy, Precision, Recall, F1, ROC-AUC, Log Loss, Balanced Accuracy</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> Confusion matrix analysis for each model</li>
+                <li class="flex items-start gap-2"><span class="text-brand-400 mt-1">&#8226;</span> SHAP explainability for feature-level prediction interpretation</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

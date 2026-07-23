@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}About - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-8">About This Project</h1>
+
+    <div class="space-y-8">
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Project Overview</h2>
+            <p class="text-dark-300 leading-relaxed">
+                This system is developed as an undergraduate project titled
+                <span class="text-brand-400 font-medium">"Development of a Web-Based Football Match Prediction
+                System Using a Stacking Ensemble Machine Learning Model."</span>
+                It predicts English Premier League match outcomes using historical match statistics from the 2019-2020
+                through 2024-2025 seasons.
+            </p>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Supported Clubs</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div class="glass-light rounded-xl p-4 text-center">
+                    <img src="{% static 'images/arsenal.png' %}" alt="Arsenal" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-white font-medium">Arsenal</p>
+                </div>
+                <div class="glass-light rounded-xl p-4 text-center">
+                    <img src="{% static 'images/liverpool.png' %}" alt="Liverpool" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-white font-medium">Liverpool</p>
+                </div>
+                <div class="glass-light rounded-xl p-4 text-center">
+                    <img src="{% static 'images/manchester_city.png' %}" alt="Manchester City" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-white font-medium">Manchester City</p>
+                </div>
+                <div class="glass-light rounded-xl p-4 text-center">
+                    <img src="{% static 'images/chelsea.png' %}" alt="Chelsea" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-white font-medium">Chelsea</p>
+                </div>
+                <div class="glass-light rounded-xl p-4 text-center">
+                    <img src="{% static 'images/manchester_united.png' %}" alt="Manchester United" class="h-16 mx-auto mb-2 object-contain">
+                    <p class="text-white font-medium">Manchester United</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Technology Stack</h2>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <h3 class="text-brand-400 font-medium mb-2">Backend</h3>
+                    <ul class="space-y-1 text-dark-300">
+                        <li>Django 5+</li>
+                        <li>Python 3.11+</li>
+                        <li>SQLite / PostgreSQL</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-brand-400 font-medium mb-2">Machine Learning</h3>
+                    <ul class="space-y-1 text-dark-300">
+                        <li>XGBoost</li>
+                        <li>Scikit-learn (SVM, Random Forest, Logistic Regression)</li>
+                        <li>SHAP</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-brand-400 font-medium mb-2">Frontend</h3>
+                    <ul class="space-y-1 text-dark-300">
+                        <li>Tailwind CSS</li>
+                        <li>JavaScript (AJAX)</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-brand-400 font-medium mb-2">Deployment</h3>
+                    <ul class="space-y-1 text-dark-300">
+                        <li>Render.com</li>
+                        <li>Gunicorn</li>
+                        <li>WhiteNoise</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

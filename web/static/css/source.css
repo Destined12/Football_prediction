@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #0f172a;
+    --color-primary-light: #1e293b;
+    --color-accent: #10b981;
+    --color-accent-hover: #059669;
+    --color-gold: #f59e0b;
+    --color-surface: #1e293b;
+    --color-surface-light: #334155;
+    --color-danger: #ef4444;
+    --color-draw: #eab308;
+    --color-home: #10b981;
+    --color-away: #ef4444;
+}

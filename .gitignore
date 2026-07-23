@@ -1,0 +1,21 @@
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+staticfiles/
+media/
+*.log
+.env
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+exploratory/__pycache__/
+model/__pycache__/

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}Model Information - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-8">Model Information</h1>
+
+    <div class="space-y-8">
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Stacking Ensemble Architecture</h2>
+            <p class="text-dark-300 leading-relaxed mb-6">
+                The prediction system uses a two-level stacking ensemble that combines three heterogeneous
+                base learners with a logistic regression meta-learner. Out-of-fold (OOF) predictions are
+                used during meta-learner training to prevent data leakage.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-light rounded-xl p-6">
+                    <h3 class="text-brand-400 font-semibold mb-3">Level 0: Base Learners</h3>
+                    <div class="space-y-3 text-sm text-dark-300">
+                        <div class="flex items-start gap-3">
+                            <span class="w-2 h-2 rounded-full bg-orange-500 mt-1.5 shrink-0"></span>
+                            <div>
+                                <p class="text-white font-medium">XGBoost</p>
+                                <p>Regularized gradient boosting. Tuned: n_estimators=500, max_depth=5, lr=0.05.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0"></span>
+                            <div>
+                                <p class="text-white font-medium">SVM (Calibrated)</p>
+                                <p>RBF kernel with StandardScaler pipeline. Calibrated via isotonic regression for probability outputs.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                            <div>
+                                <p class="text-white font-medium">Random Forest</p>
+                                <p>500 estimators, balanced class weights. Diverse from boosting models for ensemble diversity.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-light rounded-xl p-6">
+                    <h3 class="text-brand-400 font-semibold mb-3">Level 1: Meta-Learner</h3>
+                    <div class="text-sm text-dark-300">
+                        <div class="flex items-start gap-3">
+                            <span class="w-2 h-2 rounded-full bg-purple-500 mt-1.5 shrink-0"></span>
+                            <div>
+                                <p class="text-white font-medium">Logistic Regression</p>
+                                <p>Combines 9 probability outputs (3 per base model) into final prediction.</p>
+                                <ul class="mt-2 space-y-1 text-dark-400">
+                                    <li>class_weight: balanced</li>
+                                    <li>solver: lbfgs</li>
+                                    <li>max_iter: 5000</li>
+                                    <li>OOF training to prevent leakage</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Prediction Pipeline</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="glass-light rounded-xl px-6 py-3 text-sm text-dark-300">Input Features (50 selected)</div>
+                <svg class="w-5 h-5 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="grid grid-cols-3 gap-4 text-xs text-center">
+                    <div class="glass-light rounded-xl px-4 py-3 text-dark-300">XGBoost<br><span class="text-orange-400">3 probabilities</span></div>
+                    <div class="glass-light rounded-xl px-4 py-3 text-dark-300">SVM<br><span class="text-blue-400">3 probabilities</span></div>
+                    <div class="glass-light rounded-xl px-4 py-3 text-dark-300">Random Forest<br><span class="text-emerald-400">3 probabilities</span></div>
+                </div>
+                <svg class="w-5 h-5 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="glass-light rounded-xl px-6 py-3 text-sm text-dark-300">Concatenated (9 features)</div>
+                <svg class="w-5 h-5 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="glass-light rounded-xl px-6 py-3 text-sm text-dark-300">Logistic Regression (balanced)</div>
+                <svg class="w-5 h-5 text-dark-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
+                <div class="bg-gradient-to-r from-brand-600 to-blue-600 rounded-xl px-6 py-3 text-sm text-white font-semibold">Final Prediction + Confidence</div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-8">
+            <h2 class="text-xl font-semibold text-white mb-4">Test Set Performance (2024-2025 Season)</h2>
+            <p class="text-dark-400 text-sm mb-6">170 matches, chronological split. Macro-averaged metrics.</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead>
+                        <tr class="border-b border-dark-700">
+                            <th class="py-3 px-4 text-dark-400 font-medium">Model</th>
+                            <th class="py-3 px-4 text-dark-400 font-medium">Accuracy</th>
+                            <th class="py-3 px-4 text-dark-400 font-medium">F1 (Macro)</th>
+                            <th class="py-3 px-4 text-dark-400 font-medium">ROC-AUC</th>
+                            <th class="py-3 px-4 text-dark-400 font-medium">Log Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-dark-300">
+                        <tr class="border-b border-dark-700/50">
+                            <td class="py-3 px-4 font-medium text-orange-400">XGBoost</td>
+                            <td class="py-3 px-4">0.5706</td>
+                            <td class="py-3 px-4">0.4455</td>
+                            <td class="py-3 px-4">0.6677</td>
+                            <td class="py-3 px-4">1.2160</td>
+                        </tr>
+                        <tr class="border-b border-dark-700/50">
+                            <td class="py-3 px-4 font-medium text-blue-400">SVM</td>
+                            <td class="py-3 px-4">0.6059</td>
+                            <td class="py-3 px-4">0.4555</td>
+                            <td class="py-3 px-4">0.6797</td>
+                            <td class="py-3 px-4">0.9371</td>
+                        </tr>
+                        <tr class="border-b border-dark-700/50">
+                            <td class="py-3 px-4 font-medium text-emerald-400">Random Forest</td>
+                            <td class="py-3 px-4">0.5765</td>
+                            <td class="py-3 px-4">0.4515</td>
+                            <td class="py-3 px-4">0.7023</td>
+                            <td class="py-3 px-4">0.9309</td>
+                        </tr>
+                        <tr class="bg-brand-500/5">
+                            <td class="py-3 px-4 font-semibold text-white">Ensemble (Stacking)</td>
+                            <td class="py-3 px-4 font-semibold">0.5765</td>
+                            <td class="py-3 px-4 font-semibold">0.4507</td>
+                            <td class="py-3 px-4 font-semibold">0.6748</td>
+                            <td class="py-3 px-4 font-semibold">1.5475</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-dark-500 text-xs mt-4">Best individual model: SVM (accuracy 60.6%). Random Forest achieves highest ROC-AUC (0.702).</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

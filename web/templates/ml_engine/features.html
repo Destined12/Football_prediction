@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Features - Anointing Prediction System{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-4">Engineered Features</h1>
+    <p class="text-dark-400 mb-8">{{ total_raw }} raw features &rarr; {{ total_filtered }} after correlation filter &rarr; <span class="text-brand-400 font-semibold">{{ total_selected }} selected</span> via SHAP ranking + TimeSeriesSplit CV</p>
+
+    <div class="space-y-6">
+        {% for group in feature_groups %}
+        <div class="glass rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-lg font-semibold text-white">{{ group.name }}</h2>
+                <span class="text-xs text-dark-400 glass-light rounded-full px-3 py-1">{{ group.count }} features</span>
+            </div>
+            <p class="text-dark-400 text-sm mb-3">{{ group.description }}</p>
+            <div class="flex flex-wrap gap-2">
+                {% for ex in group.examples %}
+                <code class="text-xs bg-dark-800 text-brand-400 rounded px-2 py-1 font-mono">{{ ex }}</code>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if top_features %}
+    <div class="mt-12 glass rounded-2xl p-8">
+        <h2 class="text-xl font-semibold text-white mb-6">Top 20 Features by SHAP Importance</h2>
+        <div class="space-y-3">
+            {% for feat in top_features %}
+            <div class="flex items-center gap-4">
+                <span class="text-xs text-dark-500 w-6 text-right">{{ forloop.counter }}</span>
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-sm text-dark-200 font-mono">{{ feat.feature }}</span>
+                        <span class="text-xs text-dark-400">{{ feat.shap_importance|floatformat:4 }}</span>
+                    </div>
+                    <div class="w-full bg-dark-800 rounded-full h-1.5">
+                        <div class="h-1.5 rounded-full bg-gradient-to-r from-brand-500 to-blue-500" style="width: {% widthratio feat.shap_importance 0.07 100 %}%"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if selected_features %}
+    <div class="mt-8 glass rounded-2xl p-8">
+        <h2 class="text-xl font-semibold text-white mb-4">Selected 50 Features</h2>
+        <div class="flex flex-wrap gap-2">
+            {% for feat in selected_features %}
+            <code class="text-xs bg-dark-800 text-dark-300 rounded px-2 py-1 font-mono">{{ feat }}</code>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
