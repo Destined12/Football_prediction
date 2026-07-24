@@ -10,8 +10,10 @@ services:
     name: football-prediction
     runtime: python
     buildCommand: "cd web && ./build.sh"
-    startCommand: "cd web && gunicorn config.wsgi:application"
+    startCommand: "gunicorn config.wsgi:application"
     envVars:
+      - key: PYTHONPATH
+        value: "web"
       - key: DATABASE_URL
         fromDatabase:
           name: football-db
