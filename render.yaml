@@ -25,6 +25,6 @@ services:
       - key: WEB_CONCURRENCY
         value: "4"
       - key: ALLOWED_HOSTS
-        value: ".onrender.com"
+        value: "*"
       - key: CSRF_TRUSTED_ORIGINS
-        value: "https://football-prediction.onrender.com"
+        value: "https://football-prediction-wixv.onrender.com"
