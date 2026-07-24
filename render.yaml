@@ -9,9 +9,8 @@ services:
     plan: free
     name: football-prediction
     runtime: python
-    rootDir: web
-    buildCommand: ./build.sh
-    startCommand: "gunicorn config.wsgi:application"
+    buildCommand: "cd web && ./build.sh"
+    startCommand: "cd web && gunicorn config.wsgi:application"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
