@@ -329,7 +329,7 @@ class PredictionService:
             feat_names = list(self.selected_features)
             pairs = list(zip(feat_names, importances))
             pairs.sort(key=lambda x: x[1], reverse=True)
-            top = pairs[:15]
+            top = pairs[:5]
             return [
                 {
                     'name': FEATURE_NAME_MAP.get(name, name),
