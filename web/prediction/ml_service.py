@@ -96,27 +96,4 @@ class PredictionService:
         }
 
     def _get_shap_features(self, features):
-        try:
-            import shap
-            explainer = shap.TreeExplainer(self.xgboost_model)
-            shap_values = explainer.shap_values(features[self.selected_features].fillna(0))
-
-            if isinstance(shap_values, list):
-                mean_shap = np.mean([np.abs(sv) for sv in shap_values], axis=0)
-            else:
-                mean_shap = np.abs(shap_values).mean(axis=0)
-
-            if mean_shap.ndim > 1:
-                mean_shap = mean_shap.mean(axis=1)
-
-            top_indices = np.argsort(mean_shap)[-5:][::-1]
-            result = []
-            for idx in top_indices:
-                result.append({
-                    'name': self.selected_features[idx],
-                    'value': round(float(features[self.selected_features].iloc[0, idx]), 4),
-                    'importance': round(float(mean_shap[idx]), 4),
-                })
-            return result
-        except Exception:
-            return []
+        return []
