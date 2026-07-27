@@ -71,6 +71,8 @@ def api_predict(request):
             'confidence': 45.0,
             'probabilities': {'home': 45.0, 'draw': 25.0, 'away': 30.0},
             'shap_features': [],
+            'last_5_home': [],
+            'last_5_away': [],
             'error': str(e),
         })
 

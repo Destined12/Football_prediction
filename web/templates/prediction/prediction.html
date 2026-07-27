@@ -90,6 +90,21 @@
                 <h3 class="text-white font-semibold mb-3">Top Influencing Features</h3>
                 <div id="shap-features" class="space-y-2"></div>
             </div>
+
+            <div id="form-section" class="hidden mt-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-white font-semibold mb-3" id="home-form-title">Home Form (Last 5)</h3>
+                        <div id="home-form-strips" class="flex gap-1.5"></div>
+                        <div id="home-form-details" class="mt-2 text-xs text-dark-400 space-y-1"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-3" id="away-form-title">Away Form (Last 5)</h3>
+                        <div id="away-form-strips" class="flex gap-1.5"></div>
+                        <div id="away-form-details" class="mt-2 text-xs text-dark-400 space-y-1"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -190,6 +205,12 @@ async function makePrediction() {
             shapSection.classList.add('hidden');
         }
 
+        const formSection = document.getElementById('form-section');
+        formSection.classList.remove('hidden');
+
+        renderFormStrips('home', data.last_5_home || [], homeTeam);
+        renderFormStrips('away', data.last_5_away || [], awayTeam);
+
         resultCard.classList.remove('hidden');
     } catch (err) {
         errorMsg.textContent = 'Network error. Please try again.';
@@ -199,6 +220,44 @@ async function makePrediction() {
         btnText.classList.remove('hidden');
         btnSpinner.classList.add('hidden');
     }
+}
+function renderFormStrips(side, games, teamName) {
+    const stripsEl = document.getElementById(side + '-form-strips');
+    const detailsEl = document.getElementById(side + '-form-details');
+    document.getElementById(side + '-form-title').textContent = teamName + ' Form (Last 5)';
+    stripsEl.innerHTML = '';
+    detailsEl.innerHTML = '';
+
+    if (games.length === 0) {
+        stripsEl.innerHTML = '<span class="text-dark-500 text-xs">No recent games</span>';
+        return;
+    }
+
+    const colors = { W: 'bg-emerald-500', D: 'bg-yellow-500', L: 'bg-red-500' };
+    const labels = { W: 'W', D: 'D', L: 'L' };
+
+    games.forEach(g => {
+        const el = document.createElement('div');
+        el.className = `${colors[g.result]} text-white text-xs font-bold w-8 h-8 rounded-lg flex items-center justify-center`;
+        el.title = `${g.venue === 'H' ? 'vs' : '@'} ${g.opponent} (${g.score})`;
+        el.textContent = labels[g.result];
+        stripsEl.appendChild(el);
+    });
+
+    const wins = games.filter(g => g.result === 'W').length;
+    const draws = games.filter(g => g.result === 'D').length;
+    const losses = games.filter(g => g.result === 'L').length;
+    const gf = games.reduce((s, g) => s + g.goals_for, 0);
+    const ga = games.reduce((s, g) => s + g.goals_against, 0);
+
+    detailsEl.innerHTML = `<span>${wins}W ${draws}D ${losses}L | GF: ${gf} GA: ${ga} GD: ${gf - ga}</span>`;
+
+    let fixtureList = '';
+    games.forEach(g => {
+        const vs = g.venue === 'H' ? 'vs' : '@';
+        fixtureList += `<span>${vs} ${g.opponent} <span class="${colors[g.result]} text-white px-1 rounded">${g.result}</span> ${g.score}</span>`;
+    });
+    detailsEl.innerHTML += `<div class="flex flex-wrap gap-2 mt-1">${fixtureList}</div>`;
 }
 </script>
 {% endblock %}
