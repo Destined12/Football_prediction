@@ -60,16 +60,19 @@ def api_predict(request):
     service = PredictionService()
     result = service.predict(home_team, away_team)
 
-    PredictionHistory.objects.create(
-        home_team=home_team,
-        away_team=away_team,
-        predicted_result=result['predicted_result'],
-        predicted_label=result['predicted_label'],
-        confidence=result['confidence'],
-        prob_home=result['probabilities']['home'],
-        prob_draw=result['probabilities']['draw'],
-        prob_away=result['probabilities']['away'],
-        shap_features=result.get('shap_features', []),
-    )
+    try:
+        PredictionHistory.objects.create(
+            home_team=home_team,
+            away_team=away_team,
+            predicted_result=result['predicted_result'],
+            predicted_label=result['predicted_label'],
+            confidence=result['confidence'],
+            prob_home=result['probabilities']['home'],
+            prob_draw=result['probabilities']['draw'],
+            prob_away=result['probabilities']['away'],
+            shap_features=result.get('shap_features', []),
+        )
+    except Exception:
+        pass
 
     return JsonResponse(result)
